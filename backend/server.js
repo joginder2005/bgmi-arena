@@ -1,7 +1,8 @@
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import express from "express";
 import morgan from "morgan";
+
 import connectDB from "./config/db.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -15,35 +16,34 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
 const allowedOrigins = (process.env.CLIENT_URL || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+.split(",")
+.map((origin) => origin.trim())
+.filter(Boolean);
 
 app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("CORS origin not allowed"));
-    },
-    credentials: true,
-  })
+cors({
+origin(origin, callback) {
+if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin)) {
+return callback(null, true);
+}
+return callback(new Error("CORS origin not allowed"));
+},
+credentials: true,
+})
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "BGMI Arena API running",
-  });
+res.json({ message: "BGMI Arena API running" });
 });
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
+res.json({ status: "ok" });
 });
 
 app.use("/api/auth", authRoutes);
@@ -58,5 +58,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+console.log(`Server listening on port ${PORT}`);
 });
