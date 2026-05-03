@@ -13,15 +13,17 @@ import walletRoutes from "./routes/walletRoutes.js";
 import withdrawalRoutes from "./routes/withdrawalRoutes.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-
-const allowedOrigins = (process.env.CLIENT_URL || "")
+const defaultAllowedOrigins = ["https://bgmi-arena.vercel.app"];
+const allowedOrigins = [
+...defaultAllowedOrigins,
+...(process.env.CLIENT_URL || "")
 .split(",")
 .map((origin) => origin.trim())
-.filter(Boolean);
+.filter(Boolean),
+];
 
 const isLocalOrigin = (origin) => {
 try {
@@ -47,6 +49,19 @@ credentials: true,
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+app.use(async (req, res, next) => {
+if (req.method === "OPTIONS") {
+return next();
+}
+
+try {
+await connectDB();
+return next();
+} catch (error) {
+return next(error);
+}
+});
 
 app.get("/", (req, res) => {
 res.json({ message: "BGMI Arena API running" });
