@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "https://bgmi-arena-backend.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://bgmi-arena-n3mk.vercel.app";
 
 const adminLoginInitialState = {
   emailOrPhone: "",
