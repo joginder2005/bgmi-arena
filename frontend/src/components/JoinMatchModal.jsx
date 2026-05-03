@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://bgmi-arena-backend.onrender.com";
 
 function JoinMatchModal({ match, isOpen, onClose, onJoined }) {
   const { isAuthenticated, token } = useAuth();

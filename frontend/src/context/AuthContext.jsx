@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 const AuthContext = createContext(null);
 
 const STORAGE_KEY = "bgmi-arena-auth";
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://bgmi-arena-backend.onrender.com";
 
 function readStoredAuth() {
   try {

@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://bgmi-arena-backend.onrender.com";
 
 export function normaliseStatus(status) {
   const value = String(status || "").toLowerCase();
