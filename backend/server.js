@@ -17,15 +17,25 @@ connectDB();
 
 const app = express();
 
+
 const allowedOrigins = (process.env.CLIENT_URL || "")
 .split(",")
 .map((origin) => origin.trim())
 .filter(Boolean);
 
+const isLocalOrigin = (origin) => {
+try {
+const { hostname } = new URL(origin);
+return ["localhost", "127.0.0.1", "::1"].includes(hostname);
+} catch {
+return false;
+}
+};
+
 app.use(
 cors({
 origin(origin, callback) {
-if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin)) {
+if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin) || isLocalOrigin(origin)) {
 return callback(null, true);
 }
 return callback(new Error("CORS origin not allowed"));
@@ -57,6 +67,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+if (!process.env.VERCEL) {
+const server = app.listen(PORT, () => {
 console.log(`Server listening on port ${PORT}`);
 });
+
+server.on("error", (error) => {
+if (error.code === "EADDRINUSE") {
+console.error(`Port ${PORT} is already in use. Stop the existing backend process or set a different PORT in backend/.env.`);
+process.exit(1);
+}
+throw error;
+});
+}
+
+export default app;
